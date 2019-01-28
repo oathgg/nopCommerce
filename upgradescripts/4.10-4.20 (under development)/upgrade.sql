@@ -1109,3 +1109,8 @@ BEGIN
 END
 GO
 
+--new ground shipping description
+Update [ShippingMethod] set [Description] = 'Shipping by land transport'
+where [Name] = 'Ground'
+GO
+
