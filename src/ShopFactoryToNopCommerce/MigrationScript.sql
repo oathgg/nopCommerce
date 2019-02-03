@@ -19,21 +19,6 @@
 	/* 
 		BASE TABLES
 	*/
-	- [Product]
-		-- FROM SF
-		-> [Name]
-		-> [ShortDescription]
-		-> [FullDescription
-		-> [MetaKeywords]
-		-> [MetaDescription]
-		-> [MetaTitle]
-		-> [Sku], Vendor product Id
-		-> [Price]
-		-> [OldPrice], if available.
-
-		-- DEFAULT
-		-> 
-
 	- [Category]
 		-- FROM SF
 		-> [Name]
@@ -58,6 +43,20 @@
 		-> [CreatedOnUtc], DateTimeNow
 		-> [UpdatedOnUtc], DateTimeNow
 
+	- [Product]
+		-- FROM SF
+		-> [Name]
+		-> [ShortDescription]
+		-> [FullDescription
+		-> [MetaKeywords]
+		-> [MetaDescription]
+		-> [MetaTitle]
+		-> [Sku], Vendor product Id
+		-> [Price]
+		-> [OldPrice], if available.
+
+		-- DEFAULT
+		-> 
 
 	/*	
 		INSERT THROUGH POWERSHELL AS THESE FILES ARE LOCATED ON THE DRIVE
@@ -99,3 +98,30 @@
 		- [Product].[Id] -> [Product_ProductAttribute_Mapping].[ProductId]
 		- [Product_ProductAttribute_Mapping].[ProductAttributeId] -> [ProductAttribute].[Id]
 */
+
+
+use sf;
+
+-- Product
+select * from productBase;
+select * from productBase pb
+	JOIN productLang pl on pl.ObjID = pb.ObjID
+where pl.LangName = 'nl';
+
+-- Manufacturer
+select * from brandbase;
+
+-- Category
+select * from departmentBase;
+select * from departmentLang
+	where LangName = 'nl';
+
+--ID		PID	PIDREF	strFrom	strTo	strTo2	LinkData
+--952787994	SL1	6331	D3299	P44371		
+select * from Links
+
+select * from productBase
+	where objid = 'P44371'
+
+select * from departmentBase
+	where objid = 'D3299'
