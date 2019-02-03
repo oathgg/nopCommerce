@@ -50,6 +50,12 @@
     <Folder Include="Plugins\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Nop4you.Plugin.Widgets.ThemeGrandNode">
+      <HintPath>..\..\Plugins\Widgets.ThemeGrandNode\Nop4you.Plugin.Widgets.ThemeGrandNode.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">
