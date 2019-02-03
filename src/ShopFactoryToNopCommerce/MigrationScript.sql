@@ -102,26 +102,63 @@
 
 use sf;
 
--- Product
-select * from productBase;
-select * from productBase pb
-	JOIN productLang pl on pl.ObjID = pb.ObjID
-where pl.LangName = 'nl';
-
 -- Manufacturer
 select * from brandbase;
 
+-- Product
+select * from productBase pb
+	JOIN productLang pl on pl.ObjID = pb.ObjID
+where pl.LangName = 'nl'
+
 -- Category
-select * from departmentBase;
-select * from departmentLang
-	where LangName = 'nl';
+select * from departmentBase db
+	join departmentLang dl on dl.ObjID = db.ObjID
+where ParentID != ''
+	and dl.LangName = 'nl'
 
---ID		PID	PIDREF	strFrom	strTo	strTo2	LinkData
---952787994	SL1	6331	D3299	P44371		
+-- FLAT LINE FOR PRODUCT
+select 
+	plang.Name as [ProductName], 
+	dlang.Name as [CategoryName]
+from productBase product
+	JOIN productLang plang on plang.ObjID = product.ObjID
+	JOIN Links plink on plink.strTo = product.ObjID
+	JOIN departmentBase department on department.ObjID = plink.strFrom
+	JOIN departmentLang dlang on dlang.ObjID = department.ObjID
+where dlang.LangName = 'nl'
+	and department.ParentID != ''
+
+/*
+	ID			PID	PIDREF	strFrom	strTo	strTo2	LinkData
+	952781668	SL1	5		D960	P8415		
+	952781669	SL1	6		D960	P8416		
+	952781670	SL1	7		D960	P8417		
+	952781671	SL1	8		D960	P8418		
+	952781672	SL1	9		D960	P8419		
+	952781673	SL1	10		D960	P8420		
+	952781674	SL1	11		D960	P8421		
+*/
+
+-- Contains the relations from Product to Category
 select * from Links
+	where PID = 'SL1'
 
-select * from productBase
-	where objid = 'P44371'
+-- Contains the Category and all sub categories
+select dl.Name, * from departmentBase db
+	join departmentLang dl on dl.ObjID = db.ObjID
+where LangName = 'nl'
+	--and db.objid = 'D-33'
 
-select * from departmentBase
-	where objid = 'D3299'
+-- Contains the Product
+select pl.name, * from productBase pb
+	JOIN productLang pl on pl.ObjID = pb.ObjID
+where pb.objid in 
+(
+	'P8416',
+	'P8415',
+	'P8417',
+	'P8418',
+	'P8419',
+	'P8420',
+	'P8421'
+)
