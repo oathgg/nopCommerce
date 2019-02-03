@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ShopFactoryToNopCommerce", "ShopFactoryToNopCommerce.sqlproj", "{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF9497E2-1B27-4792-9EF8-8CE8F9D1FF5C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DB4258D-25A1-44D5-84EB-18C51E0B5343}
+	EndGlobalSection
+EndGlobal
