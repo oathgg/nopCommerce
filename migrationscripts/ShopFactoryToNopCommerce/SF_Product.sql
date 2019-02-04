@@ -133,7 +133,7 @@ insert into [NOPCOMMERCE_BLANK]..[URLRecord]
 select 
 	[Product].Id, 'Product', 
 	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM([Product].NAME)
+	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Product].NAME))
 		, ' ', '-')
 		, '/', '')
 		, '=', '-')
