@@ -66,7 +66,7 @@ insert into [NOPCOMMERCE_BLANK]..[URLRecord]
 select 
 	[Category].Id, 'Category', 
 	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM([Category].NAME)
+	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM([Category].NAME)
 		, ' ', '-')
 		, '/', '')
 		, '=', '-')
@@ -74,6 +74,7 @@ select
 		, '+', '')
 		, '(', '')
 		, ')', '')
+		, '''', '')
 		, '--', '-')
 	, 1, 0
 from [NOPCOMMERCE_BLANK]..[Category]
