@@ -4,12 +4,9 @@ SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Manufacturer] ON;
 WITH CTE_Manufacturer AS
 (
 	SELECT
-		-- SF
 		REPLACE(ObjId, 'BR', '') AS [Id], 
 		Manufacturer	AS [Name],
 		Enabled			AS [Published],
-
-		-- DEFAULT
 		''				AS [Description],
 		1				AS [ManufacturerTemplateId],
 		0				AS [PictureId],
