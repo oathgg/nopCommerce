@@ -1,10 +1,11 @@
-﻿USE SF;
+﻿DELETE FROM [NOPCOMMERCE_BLANK]..[Manufacturer];
+SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Manufacturer] ON;
 
-WITH SF_Manufacturer AS
+WITH CTE_Manufacturer AS
 (
 	SELECT
 		-- SF
-		REPLACE(ObjId, 'BR', '') AS [ManufacturerId], 
+		REPLACE(ObjId, 'BR', '') AS [Id], 
 		Manufacturer	AS [Name],
 		Enabled			AS [Published],
 
@@ -21,5 +22,11 @@ WITH SF_Manufacturer AS
 						AS [DisplayOrder],
 		GETDATE()		AS [CreatedOnUtc],
 		GETDATE()		AS [UpdatedOnUtc]
-	FROM brandbase
-) SELECT * FROM SF_Manufacturer
+	FROM [SF]..[brandbase]
+	WHERE Manufacturer != ''
+) 
+INSERT INTO [NOPCOMMERCE_BLANK]..[Manufacturer]
+(Id, Name, Published, Description, ManufacturerTemplateId, PictureId, PageSize, AllowCustomersToSelectPageSize, SubjectToAcl, LimitedToStores, Deleted, DisplayOrder, CreatedOnUtc, UpdatedOnUtc)
+SELECT * FROM [CTE_Manufacturer];
+
+SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Manufacturer] OFF;
