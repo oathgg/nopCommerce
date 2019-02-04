@@ -7,7 +7,8 @@ with CTE_Category AS
 	select distinct
 		REPLACE(REPLACE(department.ObjId, 'D', ''), '-', '') as [Id],
 		dlang.Name					as [Name],
-		dlang.Description			as [Description],
+		concat(dlang.Intro, dlang.Description)			
+									as [Description],
 		1							as [CategoryTemplateId],
 		LEFT(dlang.SearchEngKeywords, 400)		as [MetaKeywords],
 		dlang.SearchEngDescription	as [MetaDescription],
