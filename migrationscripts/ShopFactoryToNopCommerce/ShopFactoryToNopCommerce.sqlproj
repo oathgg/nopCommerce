@@ -62,5 +62,6 @@
     <None Include="MigrationScript.sql" />
     <None Include="SF_Category.sql" />
     <None Include="SF_Manufacturer.sql" />
+    <None Include="PostSlugFix.sql" />
   </ItemGroup>
 </Project>
