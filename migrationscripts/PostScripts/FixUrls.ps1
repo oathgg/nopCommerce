@@ -1,8 +1,4 @@
-﻿#
-# Script.ps1
-#
-
-$ErrorActionPreference = "STOP";
+﻿$ErrorActionPreference = "STOP";
 
 #p81553_Viva-Decor-Pouring-Medium.html
 function Fix-Url ([string] $Url) {
@@ -21,12 +17,24 @@ function Fix-Url ([string] $Url) {
 
     $idWithoutType = $id.Substring(1, $id.Length - 1);
     $Query = "SELECT SLUG FROM [NOPCOMMERCE_BLANK]..[URLRECORD] WHERE ENTITYNAME = '$Type' AND ENTITYID = $idWithoutType";
-    $Query;
 
     $result = Invoke-Sqlcmd -ServerInstance "(localdb)\mssqllocaldb" -Query $Query -QueryTimeout 65000;
-    $result;
+    $newUrl = "";
+    if ($result -ne $null) {
+        $newUrl = $result.SLUG;
+    } else {
+        Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object "DEAD LINK: $url";
+    }
+
+    return $newUrl;
 }
 
-$str = '<p><a href="p81553_Viva-Decor-Pouring-Medium.html">klik hier om naar het artikel te gaan</a></p> <p>&nbsp;</p>';
+$str = '<p><a href="d2574_Viva_Decor_Inka_Gold_Metaalglans_.html">klik hier om naar het artikel te gaan</a></p> <p>&nbsp;</p>';
 $url = $str.Split('"') | ? {$_ -imatch ".html"};
-Fix-Url -Url $url;
+
+$newUrl = Fix-Url -Url $url;
+if ($newUrl -ne "") {
+    $str = $str.Replace($url, $newUrl);
+} else {
+    Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object $str;
+}
