@@ -1,7 +1,7 @@
 ﻿cls;
 
 $ErrorActionPreference = "STOP";
-$VerbosePreference = "Continue";
+$VerbosePreference = "SilentlyContinue";
 
 Get-Module SQLPS -ErrorAction SilentlyContinue | Remove-Module;
 Import-Module SQLPS;
@@ -42,12 +42,13 @@ function Fix-Description ([string] $Entity, [string] $FieldName) {
 
             $id = Get-Id -Str $url;
             $newId = Fix-Id -Entity $Entity -Id $id;
+            $oldUrl = "contents/nl/$url";
 
             if (![string]::IsNullOrEmpty($newId)) {
-                Write-Host -ForegroundColor Green -BackgroundColor Black -Object "FIXED LINK: $url -> $newId";
+                Write-Host -ForegroundColor Green -BackgroundColor Black -Object "FIXED LINK: ($Entity->$RecId) $oldUrl -> $newId";
                 $newDescr = $curDescr.Replace($Url, $newId);
             } else {
-                Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object "DEAD LINK: ($Entity->$RecId) contents/nl/$url";
+                Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object "DEAD LINK: ($Entity->$RecId) $oldUrl";
             }
         }
 
