@@ -16,28 +16,55 @@
 
 /*	NOPCOMMERCE TABLES
 	
-	/* 
+	*************************************************************************
+		INSERT THROUGH POWERSHELL AS THESE FILES ARE LOCATED ON THE DRIVE
+		WE WILL ALSO HAVE TO UPDATE THE [PICTUREBINARY] TABLE.
+	*************************************************************************
+
+	- [Picture]
+		-- FROM SF
+		-> [SeoFilename]
+		-> [AltAttribute]
+		-> [TitleAttribute]
+		-> [MimeType] : 'image/jpeg'
+
+		-- DEFAULT
+		-> [Id] Not null, Incremental 1,1
+		-> [IsNew], 0
+
+	- [PictureBinary]
+		-- FROM PS
+		-> [PictureId], -> Take the [Id] from the [Picture] table.
+		-> [BinaryData], Convert image to binary file with Powershell.
+
+		-- DEFAULT
+		-> [Id] Not null, Incremental 1,1
+
+
+	*************************************************************************
 		BASE TABLES
-	*/
+	*************************************************************************
+
 	- [Category]
 		-- FROM SF
 		-> [Name]
+		-> [ParentCategoryId] Not null, if main category then 0.
+		-> [IncludeInTopMenu], if main category then 1
+		-> [ShowOnHomePage], 0
 		-> [Description]
+		-> [MetaTitle]
 		-> [MetaKeywords]
 		-> [MetaDescription]
-		-> [MetaTitle]
+		-> [Published], Visible
 
 		-- DEFAULT
-		-> [PictureId] Not null, Generated
+		-> [Id] Not null, Incremental 1,1
+		-> [PictureId] Not null, 
 		-> [CategoryTemplateId], 1
-		-> [ParentCategoryId] Not null, if main category then 0.
 		-> [PageSize] Not null, 6
 		-> [AllowCustomersToSelectPageSize], 1
-		-> [ShowOnHomePage], 0
-		-> [IncludeInTopMenu], 0
 		-> [SubjectToAcl], 0
 		-> [LimitedToStores], 0
-		-> [Published], 1
 		-> [Deleted], 0
 		-> [DisplayOrder], Incremental +1
 		-> [CreatedOnUtc], DateTimeNow
@@ -56,35 +83,13 @@
 		-> [OldPrice], if available.
 
 		-- DEFAULT
-		-> 
-
-	/*	
-		INSERT THROUGH POWERSHELL AS THESE FILES ARE LOCATED ON THE DRIVE
-		WE WILL ALSO HAVE TO UPDATE THE [PICTUREBINARY] TABLE.
-	*/
-	- [Picture]
-		-- FROM SF
-		-> [SeoFilename]
-		-> [AltAttribute]
-		-> [TitleAttribute]
-		-> [MimeType] : 'image/jpeg'
-
-		-- DEFAULT
-		-> [Id], Generated
-		-> [IsNew], 0
-
-	- [PictureBinary]
-		-- FROM PS
-		-> [PictureId], -> Take the [Id] from the [Picture] table.
-		-> [BinaryData], Convert image to binary file with Powershell.
-
-		-- DEFAULT
-		-> [Id], Generated
+		-> [Id] Not null, Incremental 1,1
 
 
-	/*	
+	*************************************************************************
 		DEPENDANCY TABLES
-	*/
+	*************************************************************************
+
 	-> [Product_Category_Mapping]
 		- [Product].[Id] -> [Product_Category_Mapping].[ProductId]
 		- [Product_Category_Mapping].[CategoryId] -> [Category].[Id]
@@ -104,25 +109,6 @@ use sf;
 
 -- MANUFACTURER
 select * from brandbase
-
--- CATEGORY
-select distinct
-	department.ObjId		as [SF_CategoryId],
-	
-	-- If the ParentId is empty of the Parent then this will become the main Category
-	-- The reason why we do this is because SF has everything under parents which are called 'Index', 'Index 2', 'Index 3'
-	CASE
-		WHEN department2.ParentID != '' THEN department.ParentID -- Indicates that this is still fine as the root
-		ELSE '' -- Reset the ParentId of the Parent, as we don't want 'Index', 'Index 2' as categories.
-	END						as [SF_ParentId],
-
-	dlang.Name				as [SF_CategoryName]
-from departmentBase department
-	JOIN departmentLang dlang on dlang.ObjID = department.ObjID
-	JOIN departmentBase department2 on department2.ObjID = department.ParentID
-where	dlang.Name != ''
-and		department.ParentID != ''
-and		dlang.LangName = 'nl'
 
 -- PRODUCT
 select 
