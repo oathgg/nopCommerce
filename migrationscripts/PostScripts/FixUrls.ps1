@@ -29,12 +29,13 @@ function Fix-Url ([string] $Url) {
     return $newUrl;
 }
 
-$str = '<p><a href="d2574_Viva_Decor_Inka_Gold_Metaalglans_.html">klik hier om naar het artikel te gaan</a></p> <p>&nbsp;</p>';
+$str = '<p><a href="d3193_Maya_Gold.html">klik hier om naar het artikel te gaan</a></p> <p>&nbsp;</p>';
 $url = $str.Split('"') | ? {$_ -imatch ".html"};
 
 $newUrl = Fix-Url -Url $url;
 if ($newUrl -ne "") {
     $str = $str.Replace($url, $newUrl);
+    Write-Host -ForegroundColor Green -BackgroundColor Black -Object "New string: $str"
 } else {
     Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object $str;
 }
