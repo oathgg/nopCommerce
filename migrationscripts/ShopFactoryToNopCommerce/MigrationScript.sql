@@ -2,14 +2,22 @@
 
 	- Payments through iDeal ??
 	- Categories
-		- Main categories
+		- Name
+		- Description
+		- Meta
+		- Picture
 		- Sub categories
 	- Products
-		- Image
-		- Title
+		- Name
 		- Short description
 		- Full description
+		- Picture
 		- Price
+	- Manufacturer
+		- Name
+		- Description
+		- Meta
+		- Picture
 	- Payment methods
 	- Transfer methods
 */
@@ -45,8 +53,28 @@
 		BASE TABLES
 	*************************************************************************
 
+	- [Manufacturer]
+		-- FROM SF
+		-> [Id], ObjId (REPLACE, 'BR', '')
+		-> [Name], Name
+		-> [Published], Enabled
+
+		-- DEFAULT
+		-> [Description], ''
+		-> [ManufacturerTemplateId], 1
+		-> [PictureId], 0
+		-> [PageSize], 6
+		-> [AllowCustomersToSelectPageSize], 1
+		-> [SubjectToAcl], 0
+		-> [LimitedToStores], 0
+		-> [Deleted], 0
+		-> [DisplayOrder], ROW_NUMBER() OVER [NAME]
+		-> [CreatedOnUtc], GETDATE()
+		-> [UpdatedOnUtc], GETDATE()
+
 	- [Category]
 		-- FROM SF
+		-> [Id], ObjId (REPLACE, 'D', '') & (REPLACE, '-', '')
 		-> [Name]
 		-> [ParentCategoryId] Not null, if main category then 0.
 		-> [IncludeInTopMenu], if main category then 1
@@ -58,7 +86,6 @@
 		-> [Published], Visible
 
 		-- DEFAULT
-		-> [Id] Not null, Incremental 1,1
 		-> [PictureId] Not null, 
 		-> [CategoryTemplateId], 1
 		-> [PageSize] Not null, 6
@@ -83,7 +110,6 @@
 		-> [OldPrice], if available.
 
 		-- DEFAULT
-		-> [Id] Not null, Incremental 1,1
 
 
 	*************************************************************************
@@ -105,10 +131,7 @@
 */
 
 
-use sf;
-
--- MANUFACTURER
-select * from brandbase
+use sf;	
 
 -- PRODUCT
 select 

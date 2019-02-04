@@ -61,5 +61,6 @@
   <ItemGroup>
     <None Include="MigrationScript.sql" />
     <None Include="SF_Category.sql" />
+    <None Include="SF_Manufacturer.sql" />
   </ItemGroup>
 </Project>
