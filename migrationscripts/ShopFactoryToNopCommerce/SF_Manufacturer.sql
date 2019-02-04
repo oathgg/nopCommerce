@@ -23,7 +23,7 @@ WITH CTE_Manufacturer AS
 	WHERE Manufacturer != ''
 ) 
 INSERT INTO [NOPCOMMERCE_BLANK]..[Manufacturer]
-(Id, Name, Published, Description, ManufacturerTemplateId, PictureId, PageSize, AllowCustomersToSelectPageSize, SubjectToAcl, LimitedToStores, Deleted, DisplayOrder, CreatedOnUtc, UpdatedOnUtc)
+	(Id, Name, Published, Description, ManufacturerTemplateId, PictureId, PageSize, AllowCustomersToSelectPageSize, SubjectToAcl, LimitedToStores, Deleted, DisplayOrder, CreatedOnUtc, UpdatedOnUtc)
 SELECT * FROM [CTE_Manufacturer];
 
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Manufacturer] OFF;

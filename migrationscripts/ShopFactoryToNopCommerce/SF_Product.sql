@@ -1,5 +1,4 @@
 ﻿DELETE FROM [NOPCOMMERCE_BLANK]..[Product];
-
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Product] ON;
 
 with CTE_Product as 
@@ -110,15 +109,15 @@ with CTE_Product as
 		GETDATE()									as [CreatedOnUtc],
 		GETDATE()									as [UpdatedOnUtc],
 		DupCount = row_number() over (PARTITION BY REPLACE(REPLACE(product.ObjId, 'p', ''), '-', '') ORDER BY REPLACE(REPLACE(product.ObjId, 'p', ''), '-', ''))
-	from productBase product
-		JOIN productLang productLang on productLang.ObjID = product.ObjID
-		JOIN Links plink on plink.strTo = product.ObjID
-		JOIN departmentBase category on category.ObjID = plink.strFrom
-		JOIN departmentLang categoryLang on categoryLang.ObjID = category.ObjID
+	from [SF]..productBase product
+		JOIN [SF]..productLang productLang on productLang.ObjID = product.ObjID
+		JOIN [SF]..Links plink on plink.strTo = product.ObjID
+		JOIN [SF]..departmentBase category on category.ObjID = plink.strFrom
+		JOIN [SF]..departmentLang categoryLang on categoryLang.ObjID = category.ObjID
 	where categoryLang.LangName = 'nl'
 		and category.ParentID != ''
 		and category.Creation != 0
-) insert into  [NOPCOMMERCE_BLANK]..[Product]
+) insert into [NOPCOMMERCE_BLANK]..[Product]
 	([Id], [ProductTypeId], [ParentGroupedProductId], [VisibleIndividually], [Name], [ShortDescription], [FullDescription], [AdminComment], [ProductTemplateId], [VendorId], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [AllowCustomerReviews], [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews], [SubjectToAcl], [LimitedToStores], [Sku], [ManufacturerPartNumber], [Gtin], [IsGiftCard], [GiftCardTypeId], [OverriddenGiftCardAmount], [RequireOtherProducts], [RequiredProductIds], [AutomaticallyAddRequiredProducts], [IsDownload], [DownloadId], [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationTypeId], [HasSampleDownload], [SampleDownloadId], [HasUserAgreement], [UserAgreementText], [IsRecurring], [RecurringCycleLength], [RecurringCyclePeriodId], [RecurringTotalCycles], [IsRental], [RentalPriceLength], [RentalPricePeriodId], [IsShipEnabled], [IsFreeShipping], [ShipSeparately], [AdditionalShippingCharge], [DeliveryDateId], [IsTaxExempt], [TaxCategoryId], [IsTelecommunicationsOrBroadcastingOrElectronicServices], [ManageInventoryMethodId], [ProductAvailabilityRangeId], [UseMultipleWarehouses], [WarehouseId], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [BackorderModeId], [AllowBackInStockSubscriptions], [OrderMinimumQuantity], [OrderMaximumQuantity], [AllowedQuantities], [AllowAddingOnlyExistingAttributeCombinations], [NotReturnable], [DisableBuyButton], [DisableWishlistButton], [AvailableForPreOrder], [PreOrderAvailabilityStartDateTimeUtc], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [BasepriceEnabled], [BasepriceAmount], [BasepriceUnitId], [BasepriceBaseAmount], [BasepriceBaseUnitId], [MarkAsNew], [MarkAsNewStartDateTimeUtc], [MarkAsNewEndDateTimeUtc], [HasTierPrices], [HasDiscountsApplied], [Weight], [Length], [Width], [Height], [AvailableStartDateTimeUtc], [AvailableEndDateTimeUtc], [DisplayOrder], [Published], [Deleted], [CreatedOnUtc], [UpdatedOnUtc])
 select
 	[Id], [ProductTypeId], [ParentGroupedProductId], [VisibleIndividually], [Name], [ShortDescription], [FullDescription], [AdminComment], [ProductTemplateId], [VendorId], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [AllowCustomerReviews], [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews], [SubjectToAcl], [LimitedToStores], [Sku], [ManufacturerPartNumber], [Gtin], [IsGiftCard], [GiftCardTypeId], [OverriddenGiftCardAmount], [RequireOtherProducts], [RequiredProductIds], [AutomaticallyAddRequiredProducts], [IsDownload], [DownloadId], [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationTypeId], [HasSampleDownload], [SampleDownloadId], [HasUserAgreement], [UserAgreementText], [IsRecurring], [RecurringCycleLength], [RecurringCyclePeriodId], [RecurringTotalCycles], [IsRental], [RentalPriceLength], [RentalPricePeriodId], [IsShipEnabled], [IsFreeShipping], [ShipSeparately], [AdditionalShippingCharge], [DeliveryDateId], [IsTaxExempt], [TaxCategoryId], [IsTelecommunicationsOrBroadcastingOrElectronicServices], [ManageInventoryMethodId], [ProductAvailabilityRangeId], [UseMultipleWarehouses], [WarehouseId], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [BackorderModeId], [AllowBackInStockSubscriptions], [OrderMinimumQuantity], [OrderMaximumQuantity], [AllowedQuantities], [AllowAddingOnlyExistingAttributeCombinations], [NotReturnable], [DisableBuyButton], [DisableWishlistButton], [AvailableForPreOrder], [PreOrderAvailabilityStartDateTimeUtc], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [BasepriceEnabled], [BasepriceAmount], [BasepriceUnitId], [BasepriceBaseAmount], [BasepriceBaseUnitId], [MarkAsNew], [MarkAsNewStartDateTimeUtc], [MarkAsNewEndDateTimeUtc], [HasTierPrices], [HasDiscountsApplied], [Weight], [Length], [Width], [Height], [AvailableStartDateTimeUtc], [AvailableEndDateTimeUtc], [DisplayOrder], [Published], [Deleted], [CreatedOnUtc], [UpdatedOnUtc]

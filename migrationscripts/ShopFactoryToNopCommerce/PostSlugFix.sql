@@ -1,6 +1,4 @@
-﻿USE NOPCOMMERCE_BLANK;
-
--- MANUFACTURER
+﻿-- MANUFACTURER
 DELETE FROM [NOPCOMMERCE_BLANK]..[URLRecord] where EntityName = 'Manufacturer';
 insert into [NOPCOMMERCE_BLANK]..[URLRecord]
 (EntityId, EntityName, Slug, IsActive, LanguageId)
