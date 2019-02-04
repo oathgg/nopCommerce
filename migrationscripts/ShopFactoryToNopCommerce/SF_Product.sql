@@ -1,5 +1,4 @@
-﻿DELETE FROM [NOPCOMMERCE_BLANK]..[URLRecord] where EntityName = 'Product';
-DELETE FROM [NOPCOMMERCE_BLANK]..[Product];
+﻿DELETE FROM [NOPCOMMERCE_BLANK]..[Product];
 
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Product] ON;
 
@@ -127,25 +126,3 @@ from CTE_Product
 	where DupCount = 1;
 
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Product] OFF;
-
-insert into [NOPCOMMERCE_BLANK]..[URLRecord]
-(EntityId, EntityName, Slug, IsActive, LanguageId)
-select 
-	[Product].Id, 'Product', 
-	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Product].NAME))
-		, ' ', '-')
-		, '/', '')
-		, '=', '-')
-		, ',', '')
-		, '+', '')
-		, '(', '')
-		, ')', '')
-		, '''', '')
-		, '--', '-') 
-	, 1, 0
-from [NOPCOMMERCE_BLANK]..[Product]
-	LEFT JOIN [NOPCOMMERCE_BLANK]..[URLRecord] on [URLRecord].EntityId = [Product].Id
-		AND [URLRecord].EntityName = 'Product'
-where	[URLRecord].EntityId IS NULL
-AND		[Product].Published = 1;

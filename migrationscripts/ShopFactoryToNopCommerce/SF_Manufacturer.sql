@@ -1,6 +1,4 @@
-﻿DELETE FROM [NOPCOMMERCE_BLANK]..[URLRecord] where EntityName = 'Manufacturer';
-DELETE FROM [NOPCOMMERCE_BLANK]..[Manufacturer];
-
+﻿DELETE FROM [NOPCOMMERCE_BLANK]..[Manufacturer];
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Manufacturer] ON;
 
 WITH CTE_Manufacturer AS
@@ -32,25 +30,3 @@ INSERT INTO [NOPCOMMERCE_BLANK]..[Manufacturer]
 SELECT * FROM [CTE_Manufacturer];
 
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Manufacturer] OFF;
-
-insert into [NOPCOMMERCE_BLANK]..[URLRecord]
-(EntityId, EntityName, Slug, IsActive, LanguageId)
-select 
-	[Manufacturer].Id, 'Manufacturer', 
-	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM([Manufacturer].NAME)
-		, ' ', '-')
-		, '/', '')
-		, '=', '-')
-		, ',', '')
-		, '+', '')
-		, '(', '')
-		, ')', '')
-		, '''', '')
-		, '--', '-')
-	, 1, 0
-from [NOPCOMMERCE_BLANK]..[Manufacturer]
-	LEFT JOIN [NOPCOMMERCE_BLANK]..[URLRecord] on [URLRecord].EntityId = [Manufacturer].Id
-		AND [URLRecord].EntityName = 'Manufacturer'
-where	[URLRecord].EntityId IS NULL
-AND		[Manufacturer].Published = 1;

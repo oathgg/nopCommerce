@@ -1,5 +1,4 @@
-﻿DELETE FROM [NOPCOMMERCE_BLANK]..[URLRecord] where EntityName = 'Category';
-DELETE FROM [NOPCOMMERCE_BLANK]..[Category];
+﻿DELETE FROM [NOPCOMMERCE_BLANK]..[Category];
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Category] ON;
 
 with CTE_Category AS
@@ -60,26 +59,3 @@ FROM [CTE_Category]
 	Where DupCount < 2
 
 SET IDENTITY_INSERT [NOPCOMMERCE_BLANK]..[Category] OFF;
-
--- Adds URL routing to the website
-insert into [NOPCOMMERCE_BLANK]..[URLRecord]
-(EntityId, EntityName, Slug, IsActive, LanguageId)
-select 
-	[Category].Id, 'Category', 
-	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Category].NAME))
-		, ' ', '-')
-		, '/', '')
-		, '=', '-')
-		, ',', '')
-		, '+', '')
-		, '(', '')
-		, ')', '')
-		, '''', '')
-		, '--', '-') 
-	, 1, 0
-from [NOPCOMMERCE_BLANK]..[Category]
-	LEFT JOIN [NOPCOMMERCE_BLANK]..[URLRecord] on [URLRecord].EntityId = [Category].Id
-		AND [URLRecord].EntityName = 'Category'
-where	[URLRecord].EntityId IS NULL
-AND		[Category].Published = 1;
