@@ -64,5 +64,6 @@
     <None Include="SF_Manufacturer.sql" />
     <None Include="PostSlugFix.sql" />
     <None Include="SF_Product.sql" />
+    <None Include="SF_Product_Category_Mapping.sql" />
   </ItemGroup>
 </Project>
