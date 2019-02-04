@@ -1,4 +1,17 @@
-﻿/*	Automated migration script to migrate all data from ShopFactory to NopCommerce
+﻿/*
+	RUN IN THE FOLLOWING ORDER
+
+	-> SF_Manufacturer.sql
+	-> SF_Category.sql
+	-> SF_Product.sql
+	-> SF_Product_Category_Mapping.sql
+	-> SF_PostSlugFix.sql
+
+	POST PowerShell script
+	-> FixUrls.ps1
+*/
+
+/*	Automated migration script to migrate all data from ShopFactory to NopCommerce
 
 	- Payments through iDeal ??
 	- Categories
