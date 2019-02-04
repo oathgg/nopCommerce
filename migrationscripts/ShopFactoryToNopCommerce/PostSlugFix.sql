@@ -5,7 +5,7 @@ insert into [NOPCOMMERCE_BLANK]..[URLRecord]
 select 
 	[Manufacturer].Id, 'Manufacturer', 
 	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM([Manufacturer].NAME)
+	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(RTRIM([Manufacturer].NAME)
 		, ' ', '-')
 		, '/', '')
 		, '=', '-')
@@ -14,6 +14,7 @@ select
 		, '(', '')
 		, ')', '')
 		, '''', '')
+		, '&', '')
 		, '--', '-')
 	, 1, 0
 from [NOPCOMMERCE_BLANK]..[Manufacturer]
@@ -30,7 +31,7 @@ insert into [NOPCOMMERCE_BLANK]..[URLRecord]
 select 
 	[Category].Id, 'Category', 
 	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Category].NAME))
+	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Category].NAME))
 		, ' ', '-')
 		, '/', '')
 		, '=', '-')
@@ -39,6 +40,7 @@ select
 		, '(', '')
 		, ')', '')
 		, '''', '')
+		, '&', '')
 		, '--', '-') 
 	, 1, 0
 from [NOPCOMMERCE_BLANK]..[Category]
@@ -55,7 +57,7 @@ insert into [NOPCOMMERCE_BLANK]..[URLRecord]
 select 
 	[Product].Id, 'Product', 
 	-- Replaces any weird characters in the slug as this will be used for the URL.
-	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Product].NAME))
+	REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LTRIM(RTRIM([Product].NAME))
 		, ' ', '-')
 		, '/', '')
 		, '=', '-')
@@ -64,6 +66,7 @@ select
 		, '(', '')
 		, ')', '')
 		, '''', '')
+		, '&', '')
 		, '--', '-') 
 	, 1, 0
 from [NOPCOMMERCE_BLANK]..[Product]

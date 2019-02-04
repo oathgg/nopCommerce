@@ -19,16 +19,18 @@ function Fix-Id ([string] $Entity, [string] $Id) {
 }
 
 function Fix-Description ([string] $Entity, [string] $FieldName) {
-    $Query = "SELECT [$FieldName] FROM [NOPCOMMERCE_BLANK]..[$Entity] WHERE [$FieldName] LIKE '%.html%'";
+    $Query = "SELECT Id, [$FieldName] FROM [NOPCOMMERCE_BLANK]..[$Entity] WHERE [$FieldName] LIKE '%.html%'";
     $result = Invoke-Sqlcmd -ServerInstance "(localdb)\mssqllocaldb" -Query $Query -QueryTimeout 65000;
-    $strArr = $result | Select-Object -Property $FieldName -ExpandProperty $FieldName;
 
-    foreach ($str in $strArr) {
-        $str = $str | Select-Object -ExpandProperty $FieldName;
+    foreach ($row in $result) {
+        $RecId = $row.Item(0)
+        $curDescr = $row.Item(1);
+        $newDescr = "";
         
-        Write-Verbose "STR: $str";
+        # String to be editted.
+        Write-Verbose "curDescr: $curDescr";
 
-        $Urls = $str.Split('"') | ? { $_ -imatch ".html" };
+        $Urls = $curDescr.Split('"') | ? { $_ -imatch ".html" };
 
         foreach ($url in $Urls) {
             Write-Verbose "URL: $url";
@@ -38,30 +40,43 @@ function Fix-Description ([string] $Entity, [string] $FieldName) {
                 Continue;
             }
 
-            # Remove .html tag
-            $url = $url.Replace(".html", "");
-
-            # Check if there is a # in the name.
-            if ($url -imatch '#') {
-                $url = $url.Split("#")[1];
-            }
-            if ($url -imatch ':') {
-                $url = $url.Split(":")[1];
-            }
-            if ($url -imatch '_') {
-                $url = $url.Split('_')[0];
-            }
-
-            $newId = Fix-Id -Entity $Entity -Id $url;
+            $id = Get-Id -Str $url;
+            $newId = Fix-Id -Entity $Entity -Id $id;
 
             if (![string]::IsNullOrEmpty($newId)) {
-                Write-Host -ForegroundColor Green -BackgroundColor Black -Object "FIXED LINK: $fullUrl -> $newId";
-                $str = $str.Replace($Url, $newId);
+                Write-Host -ForegroundColor Green -BackgroundColor Black -Object "FIXED LINK: $url -> $newId";
+                $newDescr = $curDescr.Replace($Url, $newId);
             } else {
-                Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object "DEAD LINK: $url.html";
+                Write-Host -ForegroundColor Yellow -BackgroundColor Black -Object "DEAD LINK: ($Entity->$RecId) contents/nl/$url";
             }
         }
+
+        if (![string]::IsNullOrEmpty($newDescr)) {
+            # Make the new description SQL safe.
+            $newDescr = $newDescr.Replace("'", "''");
+
+            $Query = "UPDATE [NOPCOMMERCE_BLANK]..[$ENTITY] SET $FieldName = '$newDescr' WHERE ID = $RecId";
+            Write-Verbose $Query;
+            $result = Invoke-Sqlcmd -ServerInstance "(localdb)\mssqllocaldb" -Query $Query -QueryTimeout 65000;
+        }
     }
+}
+
+function Get-Id ([string] $Str) {
+    $Str = $Str.Replace(".html", "");
+
+    # Check if there is a # in the name.
+    if ($Str -imatch '#') {
+        $Str = $Str.Split("#")[1];
+    }
+    if ($Str -imatch ':') {
+        $Str = $Str.Split(":")[1];
+    }
+    if ($Str -imatch '_') {
+        $Str = $Str.Split('_')[0];
+    }
+
+    return $Str;
 }
 
 Fix-Description -Entity "Category" -FieldName "Description";
