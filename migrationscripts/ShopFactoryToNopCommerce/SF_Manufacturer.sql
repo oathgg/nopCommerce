@@ -17,7 +17,7 @@ WITH SF_Manufacturer AS
 		0				AS [SubjectToAcl],
 		0				AS [LimitedToStores],
 		0				AS [Deleted],
-		ROW_NUMBER() OVER (PARTITION BY [NAME] ORDER BY [NAME])
+		ROW_NUMBER() OVER (PARTITION BY Manufacturer ORDER BY Manufacturer)
 						AS [DisplayOrder],
 		GETDATE()		AS [CreatedOnUtc],
 		GETDATE()		AS [UpdatedOnUtc]

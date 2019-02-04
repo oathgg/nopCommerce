@@ -68,7 +68,7 @@
 		-> [SubjectToAcl], 0
 		-> [LimitedToStores], 0
 		-> [Deleted], 0
-		-> [DisplayOrder], ROW_NUMBER() OVER [NAME]
+		-> [DisplayOrder], ROW_NUMBER() OVER [MANUFACTURER]
 		-> [CreatedOnUtc], GETDATE()
 		-> [UpdatedOnUtc], GETDATE()
 
