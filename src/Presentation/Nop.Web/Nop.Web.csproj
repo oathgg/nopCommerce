@@ -40,6 +40,7 @@
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+    <None Remove="Themes\NobleTheme\Content\js\public.onepagecheckout.js" />
 
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -48,12 +49,6 @@
 
   <ItemGroup>
     <Folder Include="Plugins\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Nop4you.Plugin.Widgets.ThemeGrandNode">
-      <HintPath>..\..\Plugins\Widgets.ThemeGrandNode\Nop4you.Plugin.Widgets.ThemeGrandNode.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <!-- This target execute after "Build" target.

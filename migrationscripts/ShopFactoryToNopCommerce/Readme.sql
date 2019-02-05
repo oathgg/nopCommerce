@@ -5,7 +5,8 @@
 	-> SF_Category.sql
 	-> SF_Product.sql
 	-> SF_Product_Category_Mapping.sql
-	-> SF_PostSlugFix.sql
+	-> SF_Post_SlugFix.sql
+	-> SF_Post_Beautify.sql
 
 	POST PowerShell script
 	-> FixUrls.ps1
