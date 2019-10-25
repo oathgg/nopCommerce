@@ -11,7 +11,7 @@ using Nop.Web.Framework.UI;
 namespace Nop.Plugin.Payments.Square.Services
 {
     /// <summary>
-    /// Represents event consumer of the Square payment plugin
+    /// Represents plugin event consumer
     /// </summary>
     public class EventConsumer :
         IConsumer<PageRenderingEvent>,
@@ -20,20 +20,23 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Fields
 
         private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly SquarePaymentSettings _squarePaymentSettings;
 
         #endregion
 
         #region Ctor
 
         public EventConsumer(ILocalizationService localizationService,
-            IPaymentService paymentService,
-            IScheduleTaskService scheduleTaskService)
+            IPaymentPluginManager paymentPluginManager,
+            IScheduleTaskService scheduleTaskService,
+            SquarePaymentSettings squarePaymentSettings)
         {
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._scheduleTaskService = scheduleTaskService;
+            _localizationService = localizationService;
+            _paymentPluginManager = paymentPluginManager;
+            _scheduleTaskService = scheduleTaskService;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion
@@ -46,18 +49,16 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <param name="eventMessage">Event message</param>
         public void HandleEvent(PageRenderingEvent eventMessage)
         {
-            if (eventMessage?.Helper?.ViewContext?.ActionDescriptor == null)
-                return;
-
             //check whether the plugin is active
-            var squarePaymentMethod = _paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName);
-            if (!_paymentService.IsPaymentMethodActive(squarePaymentMethod))
+            if (!_paymentPluginManager.IsPluginActive(SquarePaymentDefaults.SystemName))
                 return;
 
             //add js script to one page checkout
-            if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
+            if (eventMessage.GetRouteNames().Any(routeName => routeName.Equals(SquarePaymentDefaults.OnePageCheckoutRouteName)))
             {
-                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+                eventMessage.Helper?.AddScriptParts(ResourceLocation.Footer,
+                    _squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.PaymentFormScriptPath,
+                    excludeFromBundle: true);
             }
         }
 

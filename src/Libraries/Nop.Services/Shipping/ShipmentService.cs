@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Events;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Shipping
@@ -19,26 +20,29 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingPluginManager _shippingPluginManager;
 
         #endregion
 
         #region Ctor
 
         public ShipmentService(IEventPublisher eventPublisher,
+            IPickupPluginManager pickupPluginManager,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> siRepository,
-            IShippingService shippingService)
+            IShippingPluginManager shippingPluginManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._orderItemRepository = orderItemRepository;
-            this._shipmentRepository = shipmentRepository;
-            this._siRepository = siRepository;
-            this._shippingService = shippingService;
+            _eventPublisher = eventPublisher;
+            _pickupPluginManager = pickupPluginManager;
+            _orderItemRepository = orderItemRepository;
+            _shipmentRepository = shipmentRepository;
+            _siRepository = siRepository;
+            _shippingPluginManager = shippingPluginManager;
         }
 
         #endregion
@@ -71,6 +75,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingCity">Shipping city; null to load all records</param>
         /// <param name="trackingNumber">Search by tracking number</param>
         /// <param name="loadNotShipped">A value indicating whether we should load only not shipped shipments</param>
+        /// <param name="loadNotDelivered">A value indicating whether we should load only not delivered shipments</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
@@ -83,6 +88,7 @@ namespace Nop.Services.Shipping
             string shippingCity = null,
             string trackingNumber = null,
             bool loadNotShipped = false,
+            bool loadNotDelivered = false,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -91,23 +97,25 @@ namespace Nop.Services.Shipping
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 
             if (shippingCountryId > 0)
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.CountryId == shippingCountryId
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.CountryId == shippingCountryId
                                                                : s.Order.ShippingAddress.CountryId == shippingCountryId);
 
             if (shippingStateId > 0)
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.StateProvinceId == shippingStateId
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.StateProvinceId == shippingStateId
                                                                : s.Order.ShippingAddress.StateProvinceId == shippingStateId);
 
             if (!string.IsNullOrWhiteSpace(shippingCounty))
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.County.Contains(shippingCounty)
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.County.Contains(shippingCounty)
                                                                : s.Order.ShippingAddress.County.Contains(shippingCounty));
 
             if (!string.IsNullOrWhiteSpace(shippingCity))
-                query = query.Where(s => s.Order.PickUpInStore ? s.Order.PickupAddress.City.Contains(shippingCity)
+                query = query.Where(s => s.Order.PickupInStore ? s.Order.PickupAddress.City.Contains(shippingCity)
                                                                : s.Order.ShippingAddress.City.Contains(shippingCity));
 
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);
+            if (loadNotDelivered)
+                query = query.Where(s => !s.DeliveryDateUtc.HasValue);
             if (createdFromUtc.HasValue)
                 query = query.Where(s => createdFromUtc.Value <= s.CreatedOnUtc);
             if (createdToUtc.HasValue)
@@ -315,16 +323,16 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment tracker</returns>
         public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
         {
-            if (!shipment.Order.PickUpInStore)
+            if (!shipment.Order.PickupInStore)
             {
-                var shippingRateComputationMethod = _shippingService
-                    .LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                var shippingRateComputationMethod = _shippingPluginManager
+                    .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
                 return shippingRateComputationMethod?.ShipmentTracker;
             }
             else
             {
-                var pickupPointProvider = _shippingService
-                    .LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                var pickupPointProvider = _pickupPluginManager
+                    .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
                 return pickupPointProvider?.ShipmentTracker;
             }
         }
