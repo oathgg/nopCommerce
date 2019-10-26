@@ -9,7 +9,7 @@
 	-> SF_Post_Beautify.sql
 
 	POST PowerShell script
-	-> FixUrls.ps1
+	-> Fix-UrlReferences.ps1
 */
 
 

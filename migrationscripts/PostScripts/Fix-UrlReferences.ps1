@@ -1,9 +1,7 @@
 ﻿<#
-
     This tool fixes all the broken references.
         SF references contents/nl/xxxxx.html
-        Nopcommerce uses Ids
-
+        Nopcommerce uses names for better SEO.
 #>
 
 $ErrorActionPreference = "STOP";
