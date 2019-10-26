@@ -12,7 +12,9 @@
 	-> FixUrls.ps1
 */
 
-/*	Automated migration script to migrate all data from ShopFactory to NopCommerce
+
+
+/*	Migration script to migrate all data from ShopFactory to NopCommerce
 
 	- Payments through iDeal ??
 	- Categories

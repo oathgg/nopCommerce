@@ -20,8 +20,7 @@ select
 from [NOPCOMMERCE_BLANK]..[Manufacturer]
 	LEFT JOIN [NOPCOMMERCE_BLANK]..[URLRecord] on [URLRecord].EntityId = [Manufacturer].Id
 		AND [URLRecord].EntityName = 'Manufacturer'
-where	[URLRecord].EntityId IS NULL
-AND		[Manufacturer].Published = 1;
+where	[URLRecord].EntityId IS NULL;
 
 
 -- CATEGORY
@@ -46,8 +45,7 @@ select
 from [NOPCOMMERCE_BLANK]..[Category]
 	LEFT JOIN [NOPCOMMERCE_BLANK]..[URLRecord] on [URLRecord].EntityId = [Category].Id
 		AND [URLRecord].EntityName = 'Category'
-where	[URLRecord].EntityId IS NULL
-AND		[Category].Published = 1;
+where	[URLRecord].EntityId IS NULL;
 
 
 -- PRODUCT
@@ -72,8 +70,7 @@ select
 from [NOPCOMMERCE_BLANK]..[Product]
 	LEFT JOIN [NOPCOMMERCE_BLANK]..[URLRecord] on [URLRecord].EntityId = [Product].Id
 		AND [URLRecord].EntityName = 'Product'
-where	[URLRecord].EntityId IS NULL
-AND		[Product].Published = 1;
+where	[URLRecord].EntityId IS NULL;
 
 
 -- Give duplicates a unique name.

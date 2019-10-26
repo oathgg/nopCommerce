@@ -62,8 +62,12 @@
     <None Include="Readme.sql" />
     <None Include="SF_Category.sql" />
     <None Include="SF_Manufacturer.sql" />
-    <None Include="SF_PostSlugFix.sql" />
     <None Include="SF_Product.sql" />
     <None Include="SF_Product_Category_Mapping.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Full.sql" />
+    <Build Include="SF_Post_Beautify.sql" />
+    <Build Include="SF_Post_SlugFix.sql" />
   </ItemGroup>
 </Project>
