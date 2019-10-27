@@ -10,6 +10,16 @@
 
 	POST PowerShell script
 	-> Fix-UrlReferences.ps1
+    
+    /* 
+        Update the $RootContentFolder variable before running the next scripts, set the variable to downloaded language folder inside the contents folder.
+        When you download the folders make sure you leave the hierarchy intact.
+            contents
+                nl      <---- $RootContentFolder
+                media   <---- $RootMediaFolder
+    */
+    -> Fix-ImageLinks.ps1
+    -> Import-SFImages.ps1
 */
 
 
