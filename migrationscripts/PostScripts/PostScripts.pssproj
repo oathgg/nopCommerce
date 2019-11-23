@@ -25,7 +25,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="parsePage.js" />
+    <Content Include="phantomjs.exe" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Fix-UrlReferences.ps1" />
     <Compile Include="Import-SFImages.ps1" />

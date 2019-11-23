@@ -1,7 +1,3 @@
-#
-# UpdateCategoryImageLinks.ps1
-#
-
 $RootContentFolder = "C:\Temp\Creawerk_FTP\contents\nl";
 
 $phantomJsScript = "`"use strict`";
@@ -38,7 +34,7 @@ page.open('https://creawerk.nl/contents/nl/<WEBPAGE>', function() {
 				return `$('.idx2Submenu').is(':visible');
 			});
 		}, function() {
-		    fs.write('<WEBPAGE>.corrected', page.content, 'w');
+		    fs.write('Corrected\\<WEBPAGE>.corrected', page.content, 'w');
 		    phantom.exit();
 		});
 });"
@@ -52,12 +48,16 @@ function Write-Log ($Type, $Message) {
 }
 
 cd $RootContentFolder;
-$htmlPages = Get-ChildItem | ? { $_.Name -match ".html" -and $_.Name -notmatch "phantom.js" -and $_.Name -notmatch ".corrected" };
+if (-not (Test-Path "$RootContentFolder\Corrected")) {
+    mkdir "$RootContentFolder\Corrected"
+}
+
+$htmlPages = Get-ChildItem | ? { $_.Name -like "*.html" -and $_.Name[0] -match "d" };
 
 for ($i = 0; $i -lt $htmlPages.Count; $i++) {
     $pageName = $htmlPages[$i].Name;
 
-    if (Test-Path (Join-Path $RootContentFolder "$pageName.corrected")) {
+    if (Test-Path (Join-Path $RootContentFolder "\Corrected\$pageName.corrected")) {
         Write-Verbose "$pageName has already been corrected."
         continue;
     }
@@ -68,9 +68,12 @@ for ($i = 0; $i -lt $htmlPages.Count; $i++) {
     [System.IO.File]::WriteAllLines($phantomJsFileName, $phantomJsScript.Replace("<WEBPAGE>", $pageName), $Utf8NoBomEncoding);
 
     Write-Log -Type "Information" -Message ".\PhantomJS.exe $phantomJsFileName;";
-    $process = Start-Process -FilePath "C:\Temp\Creawerk_FTP\contents\nl\phantomjs.exe" -ArgumentList @($phantomJsFileName) -PassThru -NoNewWindow;
-    $process.WaitForExit(500) | Out-Null; # 15 seconds
+    Start-Process -FilePath "C:\Temp\Creawerk_FTP\contents\nl\phantomjs.exe" -ArgumentList @($phantomJsFileName) -PassThru -NoNewWindow | Out-Null;
+    
+    # Wait for 500 MS before continueing else the TCP sockets will get taken and you'll be in trouble.
+    sleep -Milliseconds 500;
 
+    # Make sure to close any processes we start if they've been running longer than 15 seconds.
     $phantomProcesses = Get-Process -Name "PhantomJs" -ErrorAction Ignore;
     foreach ($p in $phantomProcesses) {
         if ($p.StartTime.AddSeconds(15) -lt [DateTime]::Now) {
@@ -81,3 +84,5 @@ for ($i = 0; $i -lt $htmlPages.Count; $i++) {
         }
     }
 }
+
+Get-ChildItem | ? {$_.Name -like '*.phantom.js'} | Remove-Item;
